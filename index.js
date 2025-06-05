@@ -11,26 +11,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Verificar si Chromium está instalado, instalar si no
-(async () => {
-  try {
-    const puppeteerModule = require('puppeteer');
-
-    // Esto normalmente devuelve un path si Chromium está presente
-    const executablePath = puppeteerModule.executablePath();
-
-    if (!executablePath || executablePath === '') {
-      console.log('⏳ Chromium no encontrado, intentando instalar...');
-      await puppeteerModule.install();
-      console.log('✅ Chromium instalado correctamente');
-    } else {
-      console.log('✅ Chromium ya disponible');
-    }
-  } catch (err) {
-    console.error('❌ Error verificando o instalando Chromium:', err.message);
-  }
-})();
-
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.send('Servidor funcionando 🚀');
@@ -46,7 +26,6 @@ app.post('/scrape', async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      executablePath: require('puppeteer').executablePath(),
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
@@ -74,6 +53,7 @@ app.post('/scrape', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
 
 
 
